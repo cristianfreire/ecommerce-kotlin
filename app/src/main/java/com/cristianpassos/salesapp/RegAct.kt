@@ -1,5 +1,6 @@
 package com.cristianpassos.salesapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -20,17 +21,20 @@ class RegAct : AppCompatActivity() {
         reg_signup.setOnClickListener {
             if (reg_password.text.toString().equals(reg_confirm.text.toString())) {
                 var url =
-                    "http://192.168.137.1/SalesWeb/add_user.php?mobile="+ reg_mobile.text.toString() +
-                            "&password="+ reg_password.text.toString() +
+                    "http://192.168.0.106/SalesWeb/add_user.php?mobile=" + reg_mobile.text.toString() +
+                            "&password=" + reg_password.text.toString() +
                             "&name=" + reg_name.text.toString() +
-                            "&address="+ reg_address.text.toString()
+                            "&address=" + reg_address.text.toString()
 
                 var rq: RequestQueue = Volley.newRequestQueue(this)
                 var sr = StringRequest(Request.Method.GET, url, Response.Listener { response ->
-                    if (response.equals("0"))
+                    if (response.equals("0")) {
                         Toast.makeText(this, "Mobile already used", Toast.LENGTH_LONG).show()
-                    else
-                        Toast.makeText(this, "Users Created", Toast.LENGTH_LONG).show()
+                    } else {
+                        UserInfo.mobile = reg_mobile.text.toString()
+                        var i = Intent(this, HomeAct::class.java)
+                        startActivity(i)
+                    }
                 }, Response.ErrorListener { error ->
                     Toast.makeText(this, error.message, Toast.LENGTH_LONG).show()
                 })
